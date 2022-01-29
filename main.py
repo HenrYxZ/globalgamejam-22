@@ -11,7 +11,7 @@ batch = pyglet.graphics.Batch()
 bg = pyglet.sprite.Sprite(bg_img, batch=batch)
 bg.scale_y = HEIGHT / bg.height
 
-player = Player(batch=batch)
+player = Player()
 
 
 def update(dt):
@@ -22,6 +22,7 @@ def update(dt):
 def on_draw():
     window.clear()
     batch.draw()
+    player.draw()
 
 
 @window.event
