@@ -4,7 +4,7 @@ from pyglet.sprite import Sprite
 import resources
 
 
-SCALE = 0.7
+SCALE = 0.5
 
 
 class Rock(Sprite):

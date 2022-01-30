@@ -1,6 +1,9 @@
 import pyglet
 
 
+from constants import *
+
+
 pyglet.resource.path = ['./resources']
 pyglet.resource.reindex()
 
@@ -9,3 +12,9 @@ boat_right_img = pyglet.resource.image("boat-right.png")
 tree_img = pyglet.resource.image("tree.png")
 rock_img = pyglet.resource.image("rock.png")
 sky_img = pyglet.resource.image("sky.png")
+sounds = {
+    MUSIC: pyglet.resource.media("song.wav"),
+    PADDLE: pyglet.resource.media("paddle.wav", streaming=False),
+    HIT: pyglet.resource.media("hit.wav", streaming=False),
+    BACKGROUND: pyglet.resource.media("birds.wav")
+}

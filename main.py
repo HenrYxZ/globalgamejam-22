@@ -7,6 +7,7 @@ from level_maker import LevelMaker
 from player import Player
 from rock import Rock
 from tree import Tree
+import utils
 
 window = pyglet.window.Window(WIDTH, HEIGHT, caption="BackToSchool")
 camera = Camera()
@@ -43,6 +44,10 @@ def init_lvl():
         trees.append(Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
     for x, y in (rocks_pos[0] + rocks_pos[1]):
         rocks.append(Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
+    music_player = utils.play(resources.sounds[MUSIC], MUSIC_VOLUME)
+    music_player.loop = True
+    bg_player = utils.play(resources.sounds[BACKGROUND], 0.1)
+    bg_player.loop = True
 
 
 def update(dt):
@@ -53,6 +58,7 @@ def update(dt):
         # Detect collision with rocks
         for rock in rocks:
             if player.collides_with(rock):
+                utils.play(resources.sounds[HIT])
                 player.x -= delta_x
                 player.dx = -abs(player.dx * 1.2)
                 delta_x = player.update(dt)
@@ -119,6 +125,7 @@ def on_draw():
 
 @window.event
 def on_key_press(symbol, _):
+    utils.play(resources.sounds[PADDLE])
     player.on_key_press(symbol, _)
 
 
