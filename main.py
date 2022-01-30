@@ -1,11 +1,10 @@
 import pyglet
 
-
+import resources
 from camera import Camera
 from constants import *
 from level_maker import LevelMaker
 from player import Player
-from resources import bg_img
 from tree import Tree
 
 window = pyglet.window.Window(WIDTH, HEIGHT, caption="BackToSchool")
@@ -13,10 +12,16 @@ camera = Camera()
 batch = pyglet.graphics.Batch()
 objects_batch = pyglet.graphics.Batch()
 
-bg = pyglet.sprite.Sprite(bg_img, batch=batch)
-bg.scale_y = HEIGHT / bg.height
+sky = pyglet.sprite.Sprite(resources.sky_img)
+sky.scale_y = HEIGHT / sky.height
+sky.scale_x = HEIGHT / sky.height
 
-player = Player(batch=objects_batch)
+
+bg = pyglet.sprite.Sprite(resources.bg_img)
+bg.scale_y = HEIGHT / bg.height
+bg.scale_x = HEIGHT / bg.height
+
+player = Player()
 current_partition = 2
 trees = []
 obstacles = []
@@ -25,6 +30,8 @@ tree_pos = LevelMaker.create_trees(
     TREE_FOOTPRINT, LVL_LENGTH, TREE_PROB, TREE_OFFSET, PARTITION_SIZE
 )
 timer = 0
+scrolled = 0
+sky_scrolled = 0
 
 
 def init_lvl():
@@ -33,13 +40,23 @@ def init_lvl():
 
 
 def update(dt):
-    global current_partition, timer,  traveled
+    global current_partition, scrolled, sky_scrolled, timer,  traveled
     timer += dt
     delta_x = player.update(dt)
     if delta_x != 0:
         traveled += delta_x
+        scrolled += delta_x
+        delta_sky = delta_x * SKY_PARALLAX
+        sky_scrolled += delta_sky
+        sky.x -= delta_sky
         camera.move(delta_x, 0)
-
+        if scrolled > BG_LOOP_POINT:
+            # move bg again
+            bg.x += BG_LOOP_POINT
+            scrolled -= BG_LOOP_POINT
+        if sky_scrolled > SKY_LOOP_POINT:
+            sky.x += SKY_LOOP_POINT
+            sky_scrolled -= SKY_LOOP_POINT
         # Do this if camera doesn't work
         # move trees
 
@@ -65,10 +82,12 @@ def update(dt):
 @window.event
 def on_draw():
     window.clear()
-    batch.draw()
 
+    sky.draw()
     with camera:
+        bg.draw()
         objects_batch.draw()
+        player.draw()
     # objects_batch.draw()
 
 
