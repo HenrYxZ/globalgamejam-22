@@ -50,6 +50,14 @@ def update(dt):
     timer += dt
     delta_x = player.update(dt)
     if delta_x != 0:
+        # Detect collision with rocks
+        for rock in rocks:
+            if player.collides_with(rock):
+                player.x -= delta_x
+                player.dx = -abs(player.dx * 1.2)
+                delta_x = player.update(dt)
+
+        # Move everything
         traveled += delta_x
         scrolled += delta_x
         delta_sky = delta_x * SKY_PARALLAX
@@ -63,38 +71,38 @@ def update(dt):
         if sky_scrolled > SKY_LOOP_POINT:
             sky.x += SKY_LOOP_POINT
             sky_scrolled -= SKY_LOOP_POINT
-        # Do this if camera doesn't work
-        # move trees
 
-    # detect collision with rocks
+        # World Partition
+        if traveled > (current_partition - 1) * PARTITION_SIZE * MTS_TO_PIXELS:
+            # delete old stuff
+            for tree in trees:
+                if tree.x < 0:
+                    tree.dead = True
+            for tree in [tree for tree in trees if tree.dead]:
+                trees.remove(tree)
+                tree.delete()
 
+            for rock in rocks:
+                if rock.x < 0:
+                    rock.dead = True
+            for rock in [rock for rock in rocks if rock.dead]:
+                rocks.remove(rock)
+                rock.delete()
+            # load new stuff
+            for x, y in tree_pos[current_partition]:
+                trees.append(
+                    Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch)
+                )
+            for x, y in rocks_pos[current_partition]:
+                rocks.append(
+                    Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch)
+                )
+            current_partition += 1
 
-    if traveled > (current_partition - 1) * PARTITION_SIZE * MTS_TO_PIXELS:
-        # delete old stuff
-        for tree in trees:
-            if tree.x < 0:
-                tree.dead = True
-        for tree in [tree for tree in trees if tree.dead]:
-            trees.remove(tree)
-            tree.delete()
-
-        for rock in rocks:
-            if rock.x < 0:
-                rock.dead = True
-        for rock in [rock for rock in rocks if rock.dead]:
-            rocks.remove(rock)
-            rock.delete()
-        # load new stuff
-        for x, y in tree_pos[current_partition]:
-            trees.append(Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
-        for x, y in rocks_pos[current_partition]:
-            rocks.append(Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
-        current_partition += 1
-
-    # Wining condition
-    if traveled >= LVL_LENGTH * MTS_TO_PIXELS:
-        print(f"WIN! It took you {timer} seconds to travel {LVL_LENGTH}mts")
-        pyglet.app.exit()
+        # Wining condition
+        if traveled >= LVL_LENGTH * MTS_TO_PIXELS:
+            print(f"WIN! It took you {timer} seconds to travel {LVL_LENGTH}mts")
+            pyglet.app.exit()
 
 
 @window.event

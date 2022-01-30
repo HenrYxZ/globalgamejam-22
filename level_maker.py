@@ -7,6 +7,7 @@ from tree import Tree
 
 rng = np.random.default_rng()
 OFFSET_Y = 64 * BG_SCALE
+ROCKS_START_AT = 5
 
 
 class LevelMaker:
@@ -43,7 +44,7 @@ class LevelMaker:
                 obstacles.append([])
                 current_partition += 1
             if probs[i] <= prob:
-                x = pos
+                x = pos + ROCKS_START_AT
                 y = TOP_LANE_Y if channels[i] < 0.5 else BOTTOM_LANE_Y
                 obstacles[current_partition - 1].append([x, y])
         return obstacles
