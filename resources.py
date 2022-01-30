@@ -18,3 +18,8 @@ sounds = {
     HIT: pyglet.resource.media("hit.wav", streaming=False),
     BACKGROUND: pyglet.resource.media("birds.wav")
 }
+
+t2_img = pyglet.resource.image("tree2.png")
+t3_img = pyglet.resource.image("tree3.png")
+r2_img = pyglet.resource.image("rock2.png")
+r3_img = pyglet.resource.image("rock3.png")

@@ -1,3 +1,4 @@
+from datetime import timedelta
 import pyglet
 
 import resources
@@ -38,6 +39,17 @@ timer = 0
 scrolled = 0
 sky_scrolled = 0
 
+time_label = pyglet.text.Label(font_size=24, x=WIDTH - 200, y=20)
+win_label = pyglet.text.Label(
+    font_size=18, x=WIDTH/2, y=HEIGHT/2, anchor_x='center', anchor_y='center'
+)
+esc_label = pyglet.text.Label(
+    "Press [Esc] to quit", font_size=14, x=WIDTH/2, y=HEIGHT/2-100,
+    anchor_x='center',
+    anchor_y='center'
+)
+won = False
+
 
 def init_lvl():
     for x, y in (tree_pos[0] + tree_pos[1]):
@@ -51,8 +63,12 @@ def init_lvl():
 
 
 def update(dt):
-    global current_partition, scrolled, sky_scrolled, timer,  traveled
+    global current_partition, scrolled, sky_scrolled, timer,  traveled, won
+    if won:
+        return
     timer += dt
+    elapsed = utils.humanize_time(timer)
+    time_label.text = elapsed
     delta_x = player.update(dt)
     if delta_x != 0:
         # Detect collision with rocks
@@ -95,20 +111,20 @@ def update(dt):
                 rocks.remove(rock)
                 rock.delete()
             # load new stuff
-            for x, y in tree_pos[current_partition]:
-                trees.append(
-                    Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch)
-                )
-            for x, y in rocks_pos[current_partition]:
-                rocks.append(
-                    Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch)
-                )
-            current_partition += 1
+            if current_partition < LVL_LENGTH / PARTITION_SIZE:
+                for x, y in tree_pos[current_partition]:
+                    trees.append(
+                        Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch)
+                    )
+                for x, y in rocks_pos[current_partition]:
+                    rocks.append(
+                        Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch)
+                    )
+                current_partition += 1
 
         # Wining condition
         if traveled >= LVL_LENGTH * MTS_TO_PIXELS:
-            print(f"WIN! It took you {timer} seconds to travel {LVL_LENGTH}mts")
-            pyglet.app.exit()
+            won = True
 
 
 @window.event
@@ -121,6 +137,18 @@ def on_draw():
         objects_batch.draw()
         player.draw()
     # objects_batch.draw()
+    # draw UI
+
+    if won:
+        elapsed = utils.humanize_time(timer)
+        win_txt = (
+            f"WIN! It took you {elapsed} to travel {LVL_LENGTH}mts\n"
+        )
+        win_label.text = win_txt
+        win_label.draw()
+        esc_label.draw()
+    else:
+        time_label.draw()
 
 
 @window.event
