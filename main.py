@@ -5,6 +5,7 @@ from camera import Camera
 from constants import *
 from level_maker import LevelMaker
 from player import Player
+from rock import Rock
 from tree import Tree
 
 window = pyglet.window.Window(WIDTH, HEIGHT, caption="BackToSchool")
@@ -24,10 +25,13 @@ bg.scale_x = HEIGHT / bg.height
 player = Player()
 current_partition = 2
 trees = []
-obstacles = []
+rocks = []
 traveled = 0
 tree_pos = LevelMaker.create_trees(
     TREE_FOOTPRINT, LVL_LENGTH, TREE_PROB, TREE_OFFSET, PARTITION_SIZE
+)
+rocks_pos = LevelMaker.create_obstacles(
+    ROCKS_FOOTPRNT, LVL_LENGTH, ROCKS_PROB, ROCKS_OFFSET, PARTITION_SIZE
 )
 timer = 0
 scrolled = 0
@@ -37,6 +41,8 @@ sky_scrolled = 0
 def init_lvl():
     for x, y in (tree_pos[0] + tree_pos[1]):
         trees.append(Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
+    for x, y in (rocks_pos[0] + rocks_pos[1]):
+        rocks.append(Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
 
 
 def update(dt):
@@ -60,6 +66,9 @@ def update(dt):
         # Do this if camera doesn't work
         # move trees
 
+    # detect collision with rocks
+
+
     if traveled > (current_partition - 1) * PARTITION_SIZE * MTS_TO_PIXELS:
         # delete old stuff
         for tree in trees:
@@ -68,9 +77,18 @@ def update(dt):
         for tree in [tree for tree in trees if tree.dead]:
             trees.remove(tree)
             tree.delete()
+
+        for rock in rocks:
+            if rock.x < 0:
+                rock.dead = True
+        for rock in [rock for rock in rocks if rock.dead]:
+            rocks.remove(rock)
+            rock.delete()
         # load new stuff
         for x, y in tree_pos[current_partition]:
             trees.append(Tree(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
+        for x, y in rocks_pos[current_partition]:
+            rocks.append(Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
         current_partition += 1
 
     # Wining condition
