@@ -18,10 +18,10 @@ EPSILON_X = 10
 
 class Player(Sprite):
     def __init__(self, *args, **kwargs):
-        super(Player, self).__init__(img=resources.boat_img, *args, **kwargs)
+        super().__init__(img=resources.boat_right_img, *args, **kwargs)
         self.scale_x = SCALE
         self.scale_y = SCALE
-        self.x = WIDTH - self.width - 20
+        self.x = 20
         self.y = TOP_LANE_Y
         self.dx = 0
         self.timer = 0
@@ -33,7 +33,7 @@ class Player(Sprite):
         elif self.dx > 0:
             self.dx = 0
         delta_x = self.dx * dt
-        self.x -= delta_x
+        self.x += delta_x
         sin_component = self.timer * (2 * math.pi) / SECS_PER_SWING
         self.y += (math.sin(sin_component) * Y_MOVEMENT) * dt
         return delta_x
