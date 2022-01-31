@@ -18,10 +18,16 @@ To play the game run:
 
 `$ python main.py`
 
+Alternatively, you can download an executable version for Windows from the 
+"releases" section of this repository. Once you download it look at the
+README.txt file for instructions on how to use that version.
+
+
 ## Controls
 
 - Use **[UP]** and **[DOWN]** arrows to change lane
 - Press **[SPACE]** to move forward
+- Press **[ESC]** to quit
 
 ## Objective
 
