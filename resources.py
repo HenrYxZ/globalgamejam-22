@@ -13,10 +13,10 @@ tree_img = pyglet.resource.image("tree.png")
 rock_img = pyglet.resource.image("rock.png")
 sky_img = pyglet.resource.image("sky.png")
 sounds = {
-    MUSIC: pyglet.resource.media("song.wav"),
+    MUSIC: pyglet.resource.media("song.mp3"),
     PADDLE: pyglet.resource.media("paddle.wav", streaming=False),
     HIT: pyglet.resource.media("hit.wav", streaming=False),
-    BACKGROUND: pyglet.resource.media("birds.wav")
+    BACKGROUND: pyglet.resource.media("birds.mp3")
 }
 
 t2_img = pyglet.resource.image("tree2.png")
