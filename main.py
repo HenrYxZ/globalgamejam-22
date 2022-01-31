@@ -58,7 +58,7 @@ def init_lvl():
         rocks.append(Rock(x=x * MTS_TO_PIXELS, y=y, batch=objects_batch))
     music_player = utils.play(resources.sounds[MUSIC], MUSIC_VOLUME)
     music_player.loop = True
-    bg_player = utils.play(resources.sounds[BACKGROUND], 0.1)
+    bg_player = utils.play(resources.sounds[BACKGROUND], 0.4)
     bg_player.loop = True
 
 
@@ -76,7 +76,7 @@ def update(dt):
             if player.collides_with(rock):
                 utils.play(resources.sounds[HIT])
                 player.x -= delta_x
-                player.dx = -abs(player.dx * 1.2)
+                player.dx = -abs(player.dx * 0.6)
                 delta_x = player.update(dt)
 
         # Move everything
