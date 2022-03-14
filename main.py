@@ -1,5 +1,6 @@
 from datetime import timedelta
 import pyglet
+from pyglet.window import key
 
 import resources
 from camera import Camera
@@ -49,6 +50,12 @@ esc_label = pyglet.text.Label(
     anchor_y='center'
 )
 won = False
+pause = True
+pause_label = pyglet.text.Label(
+    "Press ENTER to start", font_size=14, x=WIDTH/2, y=HEIGHT/2-100,
+    anchor_x='center',
+    anchor_y='center'
+)
 
 
 def init_lvl():
@@ -64,7 +71,7 @@ def init_lvl():
 
 def update(dt):
     global current_partition, scrolled, sky_scrolled, timer,  traveled, won
-    if won:
+    if won or pause:
         return
     timer += dt
     elapsed = utils.humanize_time(timer)
@@ -149,12 +156,18 @@ def on_draw():
         esc_label.draw()
     else:
         time_label.draw()
+        if pause:
+            pause_label.draw()
 
 
 @window.event
 def on_key_press(symbol, _):
+    global pause
     utils.play(resources.sounds[PADDLE])
     player.on_key_press(symbol, _)
+
+    if symbol == key.ENTER or symbol == key.RETURN:
+        pause = not pause
 
 
 if __name__ == '__main__':
