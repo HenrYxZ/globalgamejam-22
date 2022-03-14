@@ -28,6 +28,7 @@ README.txt file for instructions on how to use that version.
 - Use **[UP]** and **[DOWN]** arrows to change lane
 - Press **[SPACE]** to move forward
 - Press **[ESC]** to quit
+- Press **[ENTER]** or **[RETURN]** to pause or unpause
 
 ## Objective
 
