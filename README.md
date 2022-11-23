@@ -12,7 +12,7 @@ would play the same game are negligible.
 
 To install requirements run:
 
-`$ python -m pip install requirements.txt`
+`$ python -m pip install -r requirements.txt`
 
 To play the game run:
 
